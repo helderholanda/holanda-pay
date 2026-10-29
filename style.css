@@ -1,0 +1,270 @@
+
+* {
+  box-sizing: border-box;
+}
+
+:root {
+  color-scheme: dark;
+  --bg: #0b1222;
+  --panel: #121e35;
+  --line: #263653;
+  --muted: #aab7cc;
+  --blue: #477bff;
+  --green: #a7f3c2;
+}
+
+body {
+  margin: 0;
+  background: radial-gradient(
+    ellipse at top,
+    #1b2b50 0,
+    #0b1222 55%
+  );
+  font-family: system-ui, -apple-system, Segoe UI, sans-serif;
+  color: #f7f9ff;
+  min-height: 100vh;
+  padding: 24px 14px;
+}
+
+.app {
+  width: min(100%, 520px);
+  margin: 0 auto;
+}
+
+.top {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 8px 0 22px;
+}
+
+.brand-mark {
+  width: 48px;
+  height: 48px;
+  border-radius: 15px;
+  background: linear-gradient(145deg, #5c8bff, #2349b5);
+  display: grid;
+  place-items: center;
+  font-weight: 850;
+  letter-spacing: -1px;
+  box-shadow: 0 8px 25px #1b4bc555;
+}
+
+.eyebrow {
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: #9eb5e5;
+  margin: 0 0 3px;
+}
+
+.top h1 {
+  font-size: 23px;
+  margin: 0;
+  letter-spacing: -.7px;
+}
+
+.top h1 span {
+  color: #77a0ff;
+}
+
+.install {
+  margin-left: auto;
+  border: 1px solid #4567a8;
+  background: #1c3159;
+  color: white;
+  border-radius: 10px;
+  padding: 9px 12px;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.intro {
+  color: #c2cde0;
+  line-height: 1.5;
+  margin-bottom: 18px;
+}
+
+.panel, .result, .rates {
+  background: linear-gradient(160deg, #172642, #111b30);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow: 0 18px 45px #0003;
+}
+
+.panel label,
+.rate-grid label {
+  display: block;
+  font-size: 13px;
+  color: #c5d1e5;
+  margin: 15px 0 8px;
+}
+
+.money-input {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  background: #0b1529;
+  border: 1px solid #354a70;
+  border-radius: 12px;
+  padding: 0 14px;
+  margin-bottom: 17px;
+}
+
+.money-input span {
+  color: #9db5e8;
+  font-weight: 700;
+}
+
+.money-input input {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  color: white;
+  font-size: 25px;
+  font-weight: 750;
+  padding: 14px 0;
+  outline: none;
+}
+
+select,
+.rate-grid input {
+  width: 100%;
+  background: #0b1529;
+  color: #f7f9ff;
+  border: 1px solid #354a70;
+  border-radius: 11px;
+  padding: 13px;
+  font-size: 15px;
+  outline: none;
+}
+
+.primary,
+.secondary {
+  width: 100%;
+  border: 0;
+  border-radius: 12px;
+  padding: 15px;
+  font-weight: 750;
+  font-size: 15px;
+  margin-top: 20px;
+}
+
+.primary {
+  background: linear-gradient(100deg, #477bff, #315de0);
+  color: white;
+  box-shadow: 0 8px 20px #315de044;
+}
+
+.secondary {
+  background: #20365d;
+  color: #dce7ff;
+  border: 1px solid #3b5687;
+  margin-top: 14px;
+}
+
+.error {
+  color: #ffaaa8;
+  font-size: 13px;
+  min-height: 18px;
+}
+
+.result {
+  margin-top: 16px;
+  border-color: #286b52;
+}
+
+.result-label {
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  color: #a7c9b7;
+  margin: 0 0 6px;
+}
+
+.result strong {
+  display: block;
+  font-size: 34px;
+  letter-spacing: -1px;
+  color: var(--green);
+  margin-bottom: 17px;
+}
+
+.result-line {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 9px 0;
+  border-top: 1px solid #ffffff16;
+  color: #c4d0e3;
+  font-size: 13px;
+}
+
+.result-line b {
+  color: white;
+  text-align: right;
+}
+
+.note {
+  font-size: 11px;
+  line-height: 1.5;
+  color: #aab7cc;
+  margin: 12px 0 0;
+}
+
+.rates {
+  margin-top: 16px;
+}
+
+.rates summary {
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.rates p {
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+.rate-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 12px;
+}
+
+.rate-grid label {
+  font-size: 11px;
+}
+
+.rate-grid input {
+  margin-top: 6px;
+  padding: 10px;
+  font-size: 14px;
+}
+
+.text-button {
+  background: transparent;
+  color: #a9c0f3;
+  border: 0;
+  padding: 12px 0;
+  text-decoration: underline;
+}
+
+footer {
+  text-align: center;
+  color: #74839e;
+  font-size: 11px;
+  padding: 24px 0 8px;
+}
+
+@media(max-width: 380px) {
+  .rate-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .result strong {
+    font-size: 29px;
+  }
+}
