@@ -16,12 +16,35 @@ const defaults = {
 const rateIds = Object.keys(defaults);
 let deferredInstall = null;
 
-function parseMoney(value) {
-  let s = String(value).trim().replace(/\s/g, '');
+// Formata o valor enquanto você digita.
+// Exemplo: 150000 vira 1.500,00.
+const moneyInput = $('netAmount');
 
-  if (s.includes(',')) {
-    s = s.replace(/\./g, '').replace(',', '.');
-  }
+moneyInput.addEventListener('input', () => {
+  const digits = moneyInput.value.replace(/\D/g, '');
+
+  const cents = Number(digits || 0);
+
+  moneyInput.value = (cents / 100).toLocaleString('pt-BR', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  });
+
+  moneyInput.setSelectionRange(
+    moneyInput.value.length,
+    moneyInput.value.length
+  );
+
+  $('result').classList.add('hidden');
+  $('error').textContent = '';
+});
+
+function parseMoney(value) {
+  const s = String(value)
+    .trim()
+    .replace(/\s/g, '')
+    .replace(/\./g, '')
+    .replace(',', '.');
 
   const n = Number(s);
 
@@ -94,9 +117,31 @@ function calculate() {
     const type = $('paymentType').value;
     const brand = $('brand').value;
 
+    if (!type) {
+      throw new Error('Selecione a forma de pagamento.');
+    }
+
+    if (!brand) {
+      throw new Error('Selecione a bandeira do cartão.');
+    }
+
+    if (
+      type === 'installments' &&
+      !$('installments').value
+    ) {
+      throw new Error('Selecione a quantidade de parcelas.');
+    }
+
     const n = type === 'installments'
       ? Number($('installments').value)
       : 1;
+
+    if (
+      type === 'installments' &&
+      (!Number.isInteger(n) || n < 2 || n > 12)
+    ) {
+      throw new Error('Selecione uma quantidade válida de parcelas.');
+    }
 
     const rate = getRate(type, brand, n, rates());
 
@@ -120,13 +165,15 @@ function calculate() {
       type !== 'installments'
     );
 
-    $('installmentValue').textContent =
-      n + 'x de ' + money(Math.round((gross / n) * 100) / 100);
+    if (type === 'installments') {
+      $('installmentValue').textContent =
+        n + 'x de ' + money(Math.round((gross / n) * 100) / 100);
+    }
 
     $('estimateNote').textContent =
       type === 'installments'
-      ? 'Taxa estimada por interpolação entre os limites da tabela enviada. Confirme o percentual exato no seu plano Cielo.'
-      : 'Cálculo com a taxa cadastrada. O arredondamento é feito para cima para proteger o líquido desejado.';
+        ? 'Taxa estimada por interpolação entre os limites da tabela enviada. Confirme o percentual exato no seu plano Cielo.'
+        : 'Cálculo com a taxa cadastrada. O arredondamento é feito para cima para proteger o líquido desejado.';
 
     $('result').classList.remove('hidden');
 
@@ -138,6 +185,7 @@ function calculate() {
   }
 }
 
+// Atualiza a exibição das parcelas e limpa resultados antigos.
 $('paymentType').addEventListener('change', () => {
 
   $('installmentGroup').classList.toggle(
@@ -145,10 +193,24 @@ $('paymentType').addEventListener('change', () => {
     $('paymentType').value !== 'installments'
   );
 
+  $('result').classList.add('hidden');
+  $('error').textContent = '';
+
+});
+
+$('brand').addEventListener('change', () => {
+  $('result').classList.add('hidden');
+  $('error').textContent = '';
+});
+
+$('installments').addEventListener('change', () => {
+  $('result').classList.add('hidden');
+  $('error').textContent = '';
 });
 
 $('calculate').addEventListener('click', calculate);
 
+// Copiar valor calculado.
 $('copyBtn').addEventListener('click', async () => {
 
   try {
@@ -172,6 +234,7 @@ $('copyBtn').addEventListener('click', async () => {
 
 });
 
+// Salvar taxas personalizadas.
 $('saveRates').addEventListener('click', () => {
 
   localStorage.setItem(
@@ -184,6 +247,7 @@ $('saveRates').addEventListener('click', () => {
 
 });
 
+// Restaurar taxas originais.
 $('resetRates').addEventListener('click', () => {
 
   rateIds.forEach(id => {
@@ -197,6 +261,7 @@ $('resetRates').addEventListener('click', () => {
 
 });
 
+// Recuperar taxas salvas anteriormente.
 try {
 
   const saved = JSON.parse(
@@ -213,6 +278,7 @@ try {
 
 } catch {}
 
+// Instalação do aplicativo.
 window.addEventListener('beforeinstallprompt', e => {
 
   e.preventDefault();
@@ -237,8 +303,11 @@ $('installBtn').addEventListener('click', async () => {
 
 });
 
-if ('serviceWorker' in navigator &&
-    location.protocol.startsWith('http')) {
+// Registro do Service Worker.
+if (
+  'serviceWorker' in navigator &&
+  location.protocol.startsWith('http')
+) {
 
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('./sw.js');
@@ -246,4 +315,6 @@ if ('serviceWorker' in navigator &&
 
 }
 
-calculate();
+// Não executar cálculo automaticamente ao abrir o aplicativo.
+$('installmentGroup').classList.add('hidden');
+$('result').classList.add('hidden');
